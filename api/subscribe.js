@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     }
 
     await sql`
-      INSERT INTO contage_page (email, name, message, source)
+      INSERT INTO contact_page (email, name, message, source)
       VALUES (${email}, ${name}, ${message}, ${source})
       ON CONFLICT (email) DO NOTHING    `;
 
