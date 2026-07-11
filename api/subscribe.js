@@ -38,6 +38,8 @@ export default async function handler(req, res) {
 
   try {
     const email = String(req.body?.email || "").trim().toLowerCase();
+    const name = String(req.body?.name || "").trim();
+    const message = String(req.body?.message || "").trim();
     const source = String(req.body?.source || "waitlist").trim();
 
     if (!isValidEmail(email)) {
@@ -48,16 +50,15 @@ export default async function handler(req, res) {
     }
 
     await sql`
-      INSERT INTO waitlist_emails (email, source)
-      VALUES (${email}, ${source})
-      ON CONFLICT (email) DO NOTHING
-    `;
+      INSERT INTO contage_page (email, name, message, source)
+      VALUES (${email}, ${name}, ${message}, ${source})
+      ON CONFLICT (email) DO NOTHING    `;
 
     return res.status(200).json({
       ok: true
     });
   } catch (error) {
-    console.error("Waitlist insert failed:", error);
+    console.error("Insert failed:", error);
 
     return res.status(500).json({
       ok: false,
