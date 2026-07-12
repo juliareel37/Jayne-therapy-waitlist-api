@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     await sql`
       INSERT INTO contact_page (email, name, message, source)
       VALUES (${email}, ${name}, ${message}, ${source})
-      ON CONFLICT (email) DO NOTHING    `;
+    `;
 
     return res.status(200).json({
       ok: true
