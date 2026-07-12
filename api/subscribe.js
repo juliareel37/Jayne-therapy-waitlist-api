@@ -36,6 +36,22 @@ function escapeHtml(value) {
 function buildNotificationEmail({ email, name, message, source }) {
   const displayName = name || "Not provided";
   const displayMessage = message || "Not provided";
+  const dashboardUrl = String(process.env.ADMIN_DASHBOARD_URL || "").trim();
+  const dashboardText = dashboardUrl
+    ? ["", "View all submissions:", dashboardUrl]
+    : [];
+  const dashboardHtml = dashboardUrl
+    ? `
+      <p style="margin: 24px 0 0;">
+        <a
+          href="${escapeHtml(dashboardUrl)}"
+          style="display: inline-block; background: #1f2933; color: #ffffff; padding: 10px 14px; text-decoration: none; border-radius: 6px;"
+        >
+          View all submissions
+        </a>
+      </p>
+    `
+    : "";
 
   const text = [
     "A new Therapy with Jayne form submission has been received.",
@@ -45,7 +61,8 @@ function buildNotificationEmail({ email, name, message, source }) {
     `Source: ${source}`,
     "",
     "Message:",
-    displayMessage
+    displayMessage,
+    ...dashboardText
   ].join("\n");
 
   const html = `
@@ -68,6 +85,7 @@ function buildNotificationEmail({ email, name, message, source }) {
       </table>
       <p style="font-weight: bold; margin-bottom: 6px;">Message</p>
       <p style="white-space: pre-wrap; margin-top: 0;">${escapeHtml(displayMessage)}</p>
+      ${dashboardHtml}
     </div>
   `;
 
